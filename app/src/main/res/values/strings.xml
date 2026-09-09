@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">AiPOS</string>
+    <string name="pos_title">Point of Sale</string>
+    <string name="search_products_hint">Search items, brands, barcodes…</string>
+    <string name="category_all">All Items</string>
+    <string name="category_beverages">Beverages</string>
+    <string name="category_snacks">Snacks</string>
+    <string name="category_instant_meals">Instant Meals</string>
+    <string name="category_canned_goods">Canned Goods</string>
+    <string name="category_household">Household</string>
+    <string name="out_of_stock">Out of stock</string>
+    <string name="low_stock_badge">%1$d left</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="empty_products_title">No products found</string>
+    <string name="empty_products_subtitle">Try searching with a different keyword or select another category.</string>
+    <string name="clear_search">Clear Search</string>
+    <string name="order_summary">Current Order</string>
+    <string name="charge_button">Charge %1$s</string>
+    <string name="scan_barcode_title">Scan Barcode</string>
+    <string name="barcode_scanner_hint">Align product barcode inside the camera frame</string>
+    <string name="item_added_to_cart">%1$s added to cart</string>
+    <string name="barcode_not_found">Barcode %1$s not found in inventory</string>
+</resources>
