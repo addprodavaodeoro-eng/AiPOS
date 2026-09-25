@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.example.data.local.AppDatabase
 import com.example.data.local.migration.MIGRATION_4_5
+import com.example.data.local.migration.MIGRATION_5_6
 
 class AiPOSApplication : Application() {
     lateinit var database: AppDatabase
@@ -17,7 +18,7 @@ class AiPOSApplication : Application() {
             AppDatabase::class.java,
             "aipos-db"
         )
-        .addMigrations(MIGRATION_4_5)
+        .addMigrations(MIGRATION_4_5, MIGRATION_5_6)
         .fallbackToDestructiveMigration()
         .build()
     }

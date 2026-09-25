@@ -25,8 +25,11 @@ data class ProductItem(
     val stockQuantity: Int = 50,
     val lowStockThreshold: Int = 5,
     val barcode: String? = null,
-    val unit: String = "pc"
+    val unit: String = "pc",
+    val sku: String? = null
 ) {
+    val stockCount: Int
+        get() = stockQuantity
     val formattedPrice: String
         get() = "₱${String.format("%,.2f", price)}"
 
@@ -228,6 +231,7 @@ fun ProductEntity.toProductItem(): ProductItem {
     return ProductItem(
         id = id,
         name = name,
+        sku = sku,
         price = price,
         costPrice = costPrice,
         category = categoryEnum,
@@ -244,6 +248,7 @@ fun ProductItem.toProductEntity(): ProductEntity {
     return ProductEntity(
         id = id,
         name = name,
+        sku = sku,
         price = price,
         costPrice = costPrice,
         category = category.name,

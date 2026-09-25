@@ -61,12 +61,89 @@ class FakeProductDao : ProductDao {
         }
     }
 
+    override suspend fun getProductBySku(sku: String): ProductEntity? {
+        return storage.values.find { it.sku == sku }
+    }
+
+    override suspend fun getProductByBarcode(barcode: String): ProductEntity? {
+        return storage.values.find { it.barcode == barcode }
+    }
+
+    override suspend fun getProductByBarcodeOrSku(code: String): ProductEntity? {
+        return storage.values.find { it.barcode == code || it.sku == code }
+    }
+
+    override fun searchProducts(query: String): Flow<List<ProductEntity>> {
+        return flowOf(storage.values.filter {
+            it.name.contains(query, ignoreCase = true) ||
+            (it.sku != null && it.sku.contains(query, ignoreCase = true)) ||
+            (it.barcode != null && it.barcode.contains(query, ignoreCase = true))
+        })
+    }
+
+    override fun getProductsByCategory(category: String): Flow<List<ProductEntity>> {
+        return flowOf(storage.values.filter { it.category.equals(category, ignoreCase = true) })
+    }
+
+    override fun getProductsBelowStock(threshold: Int): Flow<List<ProductEntity>> {
+        return flowOf(storage.values.filter { it.stockQuantity <= threshold })
+    }
+
+    override fun getTotalStockCount(): Flow<Int?> {
+        return flowOf(storage.values.sumOf { it.stockQuantity })
+    }
+
+    override fun getTotalInventoryValue(): Flow<Double?> {
+        return flowOf(storage.values.sumOf { it.price * it.stockQuantity })
+    }
+
+    override suspend fun updateStockCount(id: String, newStockCount: Int, updatedAt: Long) {
+        storage[id]?.let {
+            storage[id] = it.copy(stockQuantity = newStockCount, updatedAt = updatedAt)
+        }
+    }
+
+    override suspend fun updateStockCountBySku(sku: String, newStockCount: Int, updatedAt: Long) {
+        val prod = storage.values.find { it.sku == sku }
+        if (prod != null) {
+            storage[prod.id] = prod.copy(stockQuantity = newStockCount, updatedAt = updatedAt)
+        }
+    }
+
+    override suspend fun adjustStockBySku(sku: String, delta: Int, updatedAt: Long) {
+        val prod = storage.values.find { it.sku == sku }
+        if (prod != null) {
+            val newQty = maxOf(0, prod.stockQuantity + delta)
+            storage[prod.id] = prod.copy(stockQuantity = newQty, updatedAt = updatedAt)
+        }
+    }
+
+    override suspend fun updatePrice(id: String, newPrice: Double, updatedAt: Long) {
+        storage[id]?.let {
+            storage[id] = it.copy(price = newPrice, updatedAt = updatedAt)
+        }
+    }
+
+    override suspend fun updatePriceBySku(sku: String, newPrice: Double, updatedAt: Long) {
+        val prod = storage.values.find { it.sku == sku }
+        if (prod != null) {
+            storage[prod.id] = prod.copy(price = newPrice, updatedAt = updatedAt)
+        }
+    }
+
     override suspend fun deleteProduct(product: ProductEntity) {
         storage.remove(product.id)
     }
 
     override suspend fun deleteProductById(id: String) {
         storage.remove(id)
+    }
+
+    override suspend fun deleteProductBySku(sku: String) {
+        val prod = storage.values.find { it.sku == sku }
+        if (prod != null) {
+            storage.remove(prod.id)
+        }
     }
 
     override suspend fun deleteAllProducts() {
